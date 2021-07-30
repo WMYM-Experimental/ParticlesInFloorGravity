@@ -4,13 +4,9 @@ const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-const mouse = {
-  x: innerWidth / 2,
-  y: innerHeight / 2,
-};
-
+let gravity = 1;
+let friction = 0.85;
 //const colorArray = ["#ffb703", "#f77f00", "#fca311", "#fcbf49"];
-
 const colorArray = [
   "#9139B4",
   "#FE3E6D",
@@ -19,14 +15,20 @@ const colorArray = [
   "#42A6D8",
   "#9b111e",
 ];
-let gravity = 1;
-let friction = 0.88;
 
 addEventListener("resize", () => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
-
   init();
+});
+
+//delete particles with space bar
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    init();
+  }
 });
 
 function getRandomInt(min, max) {
@@ -73,27 +75,24 @@ class Particle {
       this.x + this.directionX + this.radius > canvas.width ||
       this.x - this.radius <= 0
     ) {
-      this.directionX = -this.directionX * friction;
+      this.directionX = -this.directionX * Math.pow(friction, 2);
     }
     this.y += this.directionY;
-    this.x += this.directionX;
+    this.x += this.directionX * Math.pow(friction, 2);
     this.draw();
   }
 }
 
 // Implementation
-let P;
 let particlesArray;
 function init() {
   particlesArray = [];
-  //P = new Particle(canvas.width / 2, canvas.height / 2, 2, 30, "#fca311");
-  console.log(P);
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 150; i++) {
     let radius = getRandomInt(5, 50);
     let x = getRandomInt(20, canvas.width - radius);
     let y = getRandomInt(0, canvas.height - radius);
-    let directionX = getRandomInt(-2, 2);
-    let directionY = getRandomInt(-2, 2);
+    let directionX = getRandomInt(-2, 3);
+    let directionY = getRandomInt(-2, 3);
     particlesArray.push(
       new Particle(
         x,
@@ -112,6 +111,7 @@ function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height); //refresh canvas
   particlesArray.forEach((ptcl) => {
+    //animation of every "particle (ptcl) in the particlesArray"
     ptcl.update();
   });
 }
