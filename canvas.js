@@ -78,7 +78,7 @@ class Particle {
       this.directionX = -this.directionX * Math.pow(friction, 2);
     }
     this.y += this.directionY;
-    this.x += this.directionX * Math.pow(friction, 2);
+    this.x += this.directionX * friction;
     this.draw();
   }
 }
@@ -91,8 +91,8 @@ function init() {
     let radius = getRandomInt(5, 50);
     let x = getRandomInt(20, canvas.width - radius);
     let y = getRandomInt(0, canvas.height - radius);
-    let directionX = getRandomInt(-2, 3);
-    let directionY = getRandomInt(-2, 3);
+    let directionX = getRandomInt(-2, 2);
+    let directionY = getRandomInt(-2, 6);
     particlesArray.push(
       new Particle(
         x,
